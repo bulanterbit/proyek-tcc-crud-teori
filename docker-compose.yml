@@ -1,24 +1,14 @@
-version: "3.3"
+version: "3.3" # atau versi yang Anda gunakan
 
 services:
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: crud-php-app
+    # ... (konfigurasi web service Anda) ...
     ports:
       - "8080:80"
-    volumes:
-      - ./web-manajemen-mhs:/var/www/html/
-    depends_on:
-      - db
-    restart: unless-stopped
 
   db:
-    image: mysql:8.0 # Atau mariadb:latest jika Anda ingin menggunakan MariaDB seperti di XAMPP Anda
+    image: mysql:8.0
     container_name: crud-mysql-db
-    ports:
-      # - "33060:3306"
     environment:
       MYSQL_DATABASE: crud_app
       MYSQL_USER: crud_user
@@ -26,8 +16,9 @@ services:
       MYSQL_ROOT_PASSWORD: SuperStrongRootPassword123!
     volumes:
       - mysql_data:/var/lib/mysql
-      # Mount file SQL untuk inisialisasi
-      - ./crud_app.sql:/docker-entrypoint-initdb.d/init.sql # <--- TAMBAHKAN BARIS INI
+      - ./crud_app.sql:/docker-entrypoint-initdb.d/init.sql
+    ports: # <--- BAGIAN INI
+      - "33060:3306" # Contoh: host_port:container_port dalam tanda kutip, sebagai item list
     restart: unless-stopped
 
 volumes:
