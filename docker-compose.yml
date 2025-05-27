@@ -1,13 +1,22 @@
 version: "3.3" # atau versi yang Anda gunakan
 
 services:
-  web:
-    # ... (konfigurasi web service Anda) ...
+  web: # <--- INI LAYANAN YANG BERMASALAH
+    build: # <--- TAMBAHKAN ATAU PASTIKAN BAGIAN INI ADA DAN BENAR
+      context: . # Menunjukkan bahwa Dockerfile ada di direktori saat ini
+      dockerfile: Dockerfile # (Opsional jika nama file-nya 'Dockerfile')
+    container_name: crud-php-app
     ports:
       - "8080:80"
+    volumes:
+      - ./web-manajemen-mhs:/var/www/html/
+    depends_on:
+      - db
+    restart: unless-stopped
 
   db:
-    image: mysql:8.0
+    # ... (konfigurasi db service Anda, pastikan ini sudah benar dari error sebelumnya) ...
+    image: mysql:8.0 # Layanan 'db' menggunakan 'image', bukan 'build'
     container_name: crud-mysql-db
     environment:
       MYSQL_DATABASE: crud_app
@@ -17,8 +26,8 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
       - ./crud_app.sql:/docker-entrypoint-initdb.d/init.sql
-    ports: # <--- BAGIAN INI
-      - "33060:3306" # Contoh: host_port:container_port dalam tanda kutip, sebagai item list
+    ports: # Pastikan format port untuk db sudah benar (list/array)
+      - "33060:3306" # Atau dikomentari/dihapus jika tidak perlu
     restart: unless-stopped
 
 volumes:
